@@ -2,6 +2,7 @@ package com.vbaggio.dscommerce.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +27,9 @@ public class Product {
 	
 	@ManyToMany(mappedBy = "products")
 	private Set<Category> categories = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>();
 
 	public Product() {
 	}
@@ -71,6 +76,14 @@ public class Product {
 	
 	public Set<Category> getCategories() {
 		return categories;
+	}
+
+	public Set<OrderItem> getItems() {
+		return items;
+	}
+	
+	public Set<Order> getOrders() {
+		return this.getItems().stream().map(x -> x.getOrder()).collect(Collectors.toSet());
 	}
 
 }

@@ -1,6 +1,10 @@
 package com.vbaggio.dscommerce.entities;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -29,6 +34,9 @@ public class Order {
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
+	
+	@OneToMany(mappedBy = "id.order")
+	private List<OrderItem> items = new ArrayList<>();
 
 	public Order() {
 	}
@@ -71,6 +79,22 @@ public class Order {
 
 	public void setClient(User client) {
 		this.client = client;
+	}
+
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public List<OrderItem> getItems() {
+		return items;
+	}
+	
+	public Set<Product> getProducts() {
+		return items.stream().map(x -> x.getProduct()).collect(Collectors.toSet());
 	}
 
 }
