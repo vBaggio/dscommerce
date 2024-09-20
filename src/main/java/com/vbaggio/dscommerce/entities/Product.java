@@ -1,6 +1,7 @@
 package com.vbaggio.dscommerce.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ public class Product {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 	private Double price;
+	private String imgUrl;
 	
 	@ManyToMany(mappedBy = "products")
 	private Set<Category> categories = new HashSet<>();
@@ -74,6 +76,14 @@ public class Product {
 		this.price = price;
 	}
 	
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
 	public Set<Category> getCategories() {
 		return categories;
 	}
@@ -84,6 +94,23 @@ public class Product {
 	
 	public Set<Order> getOrders() {
 		return this.getItems().stream().map(x -> x.getOrder()).collect(Collectors.toSet());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }
