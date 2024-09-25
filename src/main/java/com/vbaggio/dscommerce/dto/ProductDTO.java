@@ -1,11 +1,24 @@
 package com.vbaggio.dscommerce.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
 public class ProductDTO {
 
 	private Long id;
+	
+	@NotBlank(message = "Required")
+	@Size(min = 3, max = 80, message = "Must be between 3 and 80 characters")
 	private String name;
+	
+	@NotBlank(message = "Required")
+	@Size(min = 10, message = "Must be at least 10 characters")
 	private String description;
+	
+	@Positive(message = "Must be a positve value")
 	private Double price;
+	
 	private String imgUrl;
 	
 	public ProductDTO() {
