@@ -31,11 +31,32 @@ public class ProductService {
 		Page<Product> products = repository.findAll(pageable);
 		return products.map(x -> modelMapper.map(x, ProductDTO.class));
 	}
-	
+
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product product = modelMapper.map(dto, Product.class);
 		product = repository.save(product);
 		return modelMapper.map(product, ProductDTO.class);
+	}
+
+	@Transactional
+	public ProductDTO update(Long id, ProductDTO dto) {
+		Product product = repository.getReferenceById(id);
+
+		modelMapper.getConfiguration().setSkipNullEnabled(true);
+		modelMapper.typeMap(ProductDTO.class, Product.class).addMappings(mapper -> mapper.skip(Product::setId));
+
+		modelMapper.map(dto, product);
+
+		modelMapper.getConfiguration().setSkipNullEnabled(false);
+
+		product = repository.save(product);
+
+		return modelMapper.map(product, ProductDTO.class);
+	}
+	
+	@Transactional
+	public void delete(Long id) {
+		repository.deleteById(id);
 	}
 }
